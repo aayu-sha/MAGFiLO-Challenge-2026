@@ -1,4 +1,4 @@
-# Solar Filament Segmentation Challenge 2026 — Submission Repository
+# Solar Filament Segmentation Challenge 2026 Submission Repository
 
 **Team:** Aayusha Singh & Amrit Roy
 **Advisor:** Prof. Azim Ahmadzadeh, University of Missouri–St. Louis
@@ -77,7 +77,7 @@ MAGFiLO_1.0_Kaggle_2026/
 ```
 
 Key data-handling decisions (see `src/dataset.py` for implementation):
-- Images are 2048×2048 grayscale — loaded and processed as single-channel, never as RGB.
+- Images are 2048×2048 grayscale loaded and processed as single-channel, never as RGB.
 - **No deduplication by filename.** The same image can carry multiple independent
   annotator passes (e.g. `010101-...` vs `010102-...` for the same file); per the
   organizers' instructions, these are kept as separate training samples.
@@ -89,19 +89,19 @@ Key data-handling decisions (see `src/dataset.py` for implementation):
 
 ## 5. Pipeline Description
 
-*(Required by the rubric's qualitative criteria — kept in sync with `pipeline.ipynb`.)*
+*(Required by the rubric's qualitative criteria kept in sync with `pipeline.ipynb`.)*
 
-1. **Preprocessing** — grayscale normalization (percentile-based, robust to sensor
+1. **Preprocessing** grayscale normalization (percentile-based, robust to sensor
    artifacts), resizing/tiling strategy for memory constraints, instance mask construction
    from polygon annotations.
-2. **Architecture** — [instance segmentation model + pretrained backbone; final choice and
+2. **Architecture** [instance segmentation model + pretrained backbone; final choice and
    justification to be filled in here once locked, per the checklist].
-3. **Loss function** — combination targeting both overall mask overlap and fine barb
-   recovery [Tversky / clDice — final choice to be filled in once benchmarked].
-4. **Training** — [optimizer, schedule, augmentation, cross-validation setup].
-5. **Post-processing** — steps specifically added to reduce fragmentation and over-merging,
+3. **Loss function** combination targeting both overall mask overlap and fine barb
+   recovery [Tversky / clDice final choice to be filled in once benchmarked].
+4. **Training** [optimizer, schedule, augmentation, cross-validation setup].
+5. **Post-processing** steps specifically added to reduce fragmentation and over-merging,
    since PQ penalizes both explicitly.
-6. **Inference & submission generation** — `inference.py` runs the trained model on
+6. **Inference & submission generation** `inference.py` runs the trained model on
    `test/test_images/`, applies the same post-processing as validation, and encodes each
    predicted instance as RLE (via `pycocotools`) into the required submission CSV.
 
@@ -112,9 +112,9 @@ pip install -r requirements.txt
 jupyter nbconvert --to notebook --execute pipeline.ipynb
 ```
 
-`pipeline.ipynb` runs the full sequence — data loading, training (or loading
+`pipeline.ipynb` runs the full sequence data loading, training (or loading
 `checkpoints/best_model.pth` to skip retraining), local evaluation (PQ/Dice), and
-submission-file generation — end-to-end, matching the organizers' requirement that no
+submission-file generation end-to-end, matching the organizers' requirement that no
 additional file be needed to reproduce results.
 
 ## 7. Submission Format
@@ -129,7 +129,7 @@ One CSV row per predicted filament instance:
 - `filament_id`: image stem + a uniqueness suffix (`_1`, `_2`, ...).
 - `segmentation_rle`: RLE **counts only** (mask size is fixed at 2048×2048, so it is not
   stored per row); no quotation marks. Generated via `pycocotools.mask.encode`.
-- Predicted instance count per image does not need to match ground truth — matching is by
+- Predicted instance count per image does not need to match ground truth matching is by
   overlap, not row order.
 
 ## 8. Results
