@@ -45,6 +45,7 @@ Discussion tab. All results reported here come from our own held-out split of th
 .
 ├── README.md                        # This file
 ├── requirements.txt                 # Exact package versions
+├── self-evaluation-notebook.ipynb   # Given by the host
 ├── pipeline.ipynb                   # Full end-to-end pipeline: data → train → eval → submission
 ├── src/
 │   ├── dataset.py                     # Loads MAGFiLO COCO-style annotations into instance masks
