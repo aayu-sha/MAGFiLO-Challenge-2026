@@ -40,15 +40,29 @@ def polygon_to_mask(segmentation, height, width):
     return binary_mask
 
 
-def assert_single_instance(annotations):
+def assert_single_instance(annotations, closure_warn_px=2.0):
     """
     Confirm every annotation maps to exactly one filament instance:
       - segmentation contains exactly one polygon (single-piece, per the schema)
       - iscrowd is 0 for all of them
+      - polygon has at least 3 points
 
-    Raises AssertionError with the offending annotation id on the first violation.
-    Returns the count checked on success.
+    These are hard requirements and raise AssertionError with the offending
+    annotation id on the first violation.
+
+    Polygon closure (start point == end point) is checked separately as a
+    DIAGNOSTIC only, not a hard requirement: hand-traced polygons frequently
+    don't land back exactly on the start point, and pycocotools' frPyObjects
+    closes the ring implicitly during rasterization regardless, so a gap here
+    doesn't affect decoding correctness. Annotations with a gap larger than
+    closure_warn_px are collected and reported at the end instead of failing
+    the run.
+
+    Returns (n_checked, unclosed) where unclosed is a list of
+    (annotation_id, gap_px) tuples for polygons whose start/end gap exceeds
+    closure_warn_px.
     """
+    unclosed = []
     for ann in annotations:
         seg = ann["segmentation"]
         assert isinstance(seg, list) and len(seg) == 1, (
@@ -62,11 +76,24 @@ def assert_single_instance(annotations):
             f"annotation {ann['id']} polygon has {len(poly)} coords, "
             f"expected an even count >= 6 (>=3 points)"
         )
-        assert (poly[0], poly[1]) == (poly[-2], poly[-1]), (
-            f"annotation {ann['id']} polygon is not closed "
-            f"(start {poly[0:2]} != end {poly[-2:]})"
+
+        dx = poly[0] - poly[-2]
+        dy = poly[1] - poly[-1]
+        gap = (dx ** 2 + dy ** 2) ** 0.5
+        if gap > closure_warn_px:
+            unclosed.append((ann["id"], gap))
+
+    if unclosed:
+        gaps = [g for _, g in unclosed]
+        print(
+            f"[diagnostic] {len(unclosed)}/{len(annotations)} annotations have a "
+            f"start/end gap > {closure_warn_px}px (not closed exactly). "
+            f"gap range: {min(gaps):.2f}-{max(gaps):.2f}px, mean {sum(gaps) / len(gaps):.2f}px. "
+            f"This does not affect polygon_to_mask() (pycocotools closes the ring "
+            f"implicitly), so it's informational only."
         )
-    return len(annotations)
+
+    return len(annotations), unclosed
 
 
 def visualize_samples(json_path, images_dir, n_samples=8, out_path="mask_overlay_check.png"):
@@ -128,7 +155,8 @@ def _self_test():
     assert m.shape == (h, w)
     assert m.sum() == 16, f"expected 16 filled pixels, got {m.sum()}"
     assert m[3, 3] == 1 and m[0, 0] == 0
-    assert_single_instance([{"id": "test-1", "segmentation": seg, "iscrowd": 0}])
+    n, unclosed = assert_single_instance([{"id": "test-1", "segmentation": seg, "iscrowd": 0}])
+    assert n == 1 and unclosed == []
     print("Self-test passed: polygon_to_mask and assert_single_instance behave as expected.")
 
 
@@ -141,7 +169,8 @@ if __name__ == "__main__":
     
     with open(JSON_PATH) as f:
         coco = json.load(f)
-    n_checked = assert_single_instance(coco["annotations"])
+    n_checked, unclosed = assert_single_instance(coco["annotations"])
     print(f"Checked {n_checked} annotations: all single-piece, iscrowd=0.")
+    print(f"{len(unclosed)} had a notable (>2px) start/end gap -- informational only.")
     
     visualize_samples(JSON_PATH, IMAGES_DIR, n_samples=8)
