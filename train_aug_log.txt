@@ -1,0 +1,5 @@
+usage: train.py [-h] --root ROOT [--img-size IMG_SIZE]
+                [--batch-size BATCH_SIZE] [--epochs EPOCHS] [--lr LR]
+                [--val-frac VAL_FRAC] [--subset SUBSET] [--workers WORKERS]
+                [--seed SEED] [--out OUT] [--no-pretrained] [--resume RESUME]
+train.py: error: unrecognized arguments: --augment
