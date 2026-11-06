@@ -30,8 +30,9 @@ from model import build_model
 class MaskRCNNView(Dataset):
     """Adapts FilamentDataset samples to torchvision's detection target format."""
 
-    def __init__(self, base):
+    def __init__(self, base, augment=False):
         self.base = base
+        self.augment = augment
 
     def __len__(self):
         return len(self.base)
@@ -40,6 +41,11 @@ class MaskRCNNView(Dataset):
         s = self.base[i]
         img = s["image"].repeat(3, 1, 1)            # [1,H,W] -> [3,H,W]
         masks = s["masks"]                          # [N,H,W] uint8
+        if self.augment:                            # flips are valid for class-agnostic masks
+            if random.random() < 0.5:
+                img, masks = img.flip(-1), masks.flip(-1)
+            if random.random() < 0.5:
+                img, masks = img.flip(-2), masks.flip(-2)
         keep = masks.flatten(1).any(1).bool()       # drop empty masks
         masks = masks[keep]
 
@@ -108,6 +114,7 @@ def main():
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--out", default="checkpoints")
     p.add_argument("--no-pretrained", action="store_true")
+    p.add_argument("--augment", action="store_true", help="random h/v flips on training images")
     p.add_argument("--resume", default="", help="path to out/last_full.pth to continue a run")
     args = p.parse_args()
 
@@ -127,10 +134,11 @@ def main():
         train_idx, val_idx = train_idx[: args.subset], val_idx[: max(2, args.subset // 4)]
     print(f"train samples: {len(train_idx)}  val samples: {len(val_idx)}")
 
-    view = MaskRCNNView(base)
+    view_train = MaskRCNNView(base, augment=args.augment)
+    view_val = MaskRCNNView(base, augment=False)
     kw = dict(collate_fn=collate, num_workers=args.workers, pin_memory=device.type == "cuda")
-    train_loader = DataLoader(Subset(view, train_idx), batch_size=args.batch_size, shuffle=True, **kw)
-    val_loader = DataLoader(Subset(view, val_idx), batch_size=args.batch_size, shuffle=False, **kw)
+    train_loader = DataLoader(Subset(view_train, train_idx), batch_size=args.batch_size, shuffle=True, **kw)
+    val_loader = DataLoader(Subset(view_val, val_idx), batch_size=args.batch_size, shuffle=False, **kw)
 
     model = build_model(pretrained=not args.no_pretrained, img_size=args.img_size).to(device)
     params = [q for q in model.parameters() if q.requires_grad]
@@ -189,6 +197,7 @@ def main():
               f"val_loss {vl:.4f}  time {time.time() - t0:.0f}s", flush=True)
 
         torch.save(model.state_dict(), out / "last.pth")
+        torch.save(model.state_dict(), out / f"epoch_{epoch:02d}.pth")   # pick by PQ, not loss
         if vl < best:
             best = vl
             torch.save(model.state_dict(), out / "best_val_loss.pth")
