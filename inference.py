@@ -43,10 +43,11 @@ def main():
     p.add_argument("--mask-thresh", type=float, default=0.5)
     p.add_argument("--min-area", type=int, default=50, help="drop predicted masks smaller than this (pixels)")
     p.add_argument("--limit", type=int, default=0, help="only first N images (testing)")
+    p.add_argument("--anchors", choices=["default", "small"], default="default")
     args = p.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = build_model(pretrained=False, img_size=args.img_size)
+    model = build_model(pretrained=False, img_size=args.img_size, anchors=args.anchors)
     model.load_state_dict(torch.load(args.ckpt, map_location="cpu"))
     model.to(device).eval()
     # Only detections above the threshold get pasted to full 2048x2048 resolution;
@@ -89,4 +90,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()  
+    main()

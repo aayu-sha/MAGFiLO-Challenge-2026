@@ -60,6 +60,7 @@ def main():
                    help="lowest score kept when caching predictions (sweep floor)")
     p.add_argument("--mask-thresh", type=float, default=0.5)
     p.add_argument("--limit", type=int, default=0)
+    p.add_argument("--anchors", choices=["default", "small"], default="default")
     args = p.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -73,7 +74,7 @@ def main():
         val_idx = val_idx[: args.limit]
     print(f"{len(val_idx)} validation samples")
 
-    model = build_model(pretrained=False, img_size=args.img_size)
+    model = build_model(pretrained=False, img_size=args.img_size, anchors=args.anchors)
     model.load_state_dict(torch.load(args.ckpt, map_location="cpu"))
     model.to(device).eval()
     model.roi_heads.score_thresh = args.min_score   # limits full-res mask pasting

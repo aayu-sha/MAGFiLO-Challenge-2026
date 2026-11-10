@@ -15,12 +15,15 @@ by PQ comes with the metrics step.
 """
 
 import argparse
+import json
 import math
 import random
 import time
 from pathlib import Path
 
+import numpy as np
 import torch
+from pycocotools import mask as mask_util
 from torch.utils.data import DataLoader, Dataset, Subset
 
 from dataset import FilamentDataset
@@ -30,9 +33,10 @@ from model import build_model
 class MaskRCNNView(Dataset):
     """Adapts FilamentDataset samples to torchvision's detection target format."""
 
-    def __init__(self, base, augment=False):
+    def __init__(self, base, augment=False, flags=None):
         self.base = base
         self.augment = augment
+        self.flags = flags                          # consensus keep-flags per base index, or None
 
     def __len__(self):
         return len(self.base)
@@ -41,6 +45,8 @@ class MaskRCNNView(Dataset):
         s = self.base[i]
         img = s["image"].repeat(3, 1, 1)            # [1,H,W] -> [3,H,W]
         masks = s["masks"]                          # [N,H,W] uint8
+        if self.flags is not None and i in self.flags:
+            masks = masks[torch.from_numpy(self.flags[i])]   # keep only filaments another annotator also drew
         if self.augment:                            # flips are valid for class-agnostic masks
             if random.random() < 0.5:
                 img, masks = img.flip(-1), masks.flip(-1)
@@ -82,6 +88,59 @@ def split_by_filename(base, val_frac, seed):
     return train_idx, val_idx
 
 
+def compute_consensus(base, indices, iou_thr, cache_path):
+    """
+    For each training sample, flag which filaments another annotator pass of the SAME image
+    also drew (IoU > iou_thr with any filament in another pass). Files with a single pass
+    have no one to agree with, so all their filaments are kept.
+    Returns {base_index: bool array, one entry per raw annotation}. Cached as JSON.
+    """
+    cache_path = Path(cache_path)
+    if cache_path.exists():
+        raw = json.load(open(cache_path))
+        return {int(k): np.array(v, dtype=bool) for k, v in raw.items()}
+
+    groups = {}
+    for idx in indices:
+        groups.setdefault(base.images[base.image_ids[idx]]["file_name"], []).append(idx)
+
+    flags = {}
+    for n, idxs in enumerate(groups.values(), 1):
+        per = []
+        for i in idxs:
+            m = base[i]["masks"]
+            m = m.numpy() if hasattr(m, "numpy") else np.asarray(m)
+            per.append([mask_util.encode(np.asfortranarray(x.astype(np.uint8))) for x in m.astype(bool)])
+        for a, i in enumerate(idxs):
+            agreed = np.zeros(len(per[a]), dtype=bool)
+            if len(idxs) == 1:
+                agreed[:] = True                      # nobody to compare with: keep everything
+            else:
+                for b in range(len(idxs)):
+                    if b == a or not per[b] or not per[a]:
+                        continue
+                    iou = np.asarray(mask_util.iou(per[a], per[b], [0] * len(per[b])))
+                    agreed |= (iou > iou_thr).any(axis=1)
+            flags[i] = agreed
+        if n % 100 == 0:
+            print(f"  consensus: {n}/{len(groups)} files", flush=True)
+
+    json.dump({str(k): v.tolist() for k, v in flags.items()}, open(cache_path, "w"))
+    return flags
+
+
+def safe_save(obj, path):
+    """Save a checkpoint; if the disk is full, warn and carry on instead of killing the run."""
+    try:
+        torch.save(obj, path)
+    except (RuntimeError, OSError) as e:
+        print(f"WARNING: could not save {path} (disk full?): {e}", flush=True)
+        try:
+            Path(path).unlink()
+        except OSError:
+            pass
+
+
 def to_device(images, targets, device):
     images = [im.to(device) for im in images]
     targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
@@ -115,6 +174,11 @@ def main():
     p.add_argument("--out", default="checkpoints")
     p.add_argument("--no-pretrained", action="store_true")
     p.add_argument("--augment", action="store_true", help="random h/v flips on training images")
+    p.add_argument("--consensus", action="store_true",
+                   help="train only on filaments that another annotator of the same image also drew")
+    p.add_argument("--consensus-iou", type=float, default=0.5)
+    p.add_argument("--anchors", choices=["default", "small"], default="default")
+    p.add_argument("--save-every", type=int, default=1, help="keep a per-epoch checkpoint every N epochs (saves disk)")
     p.add_argument("--resume", default="", help="path to out/last_full.pth to continue a run")
     args = p.parse_args()
 
@@ -132,15 +196,26 @@ def main():
     train_idx, val_idx = split_by_filename(base, args.val_frac, args.seed)
     if args.subset:
         train_idx, val_idx = train_idx[: args.subset], val_idx[: max(2, args.subset // 4)]
+    flags = None
+    if args.consensus:
+        flags = compute_consensus(base, train_idx, args.consensus_iou,
+                                  f"consensus_iou{args.consensus_iou}_n{len(train_idx)}.json")
+        kept = sum(int(f.sum()) for f in flags.values())
+        total = sum(len(f) for f in flags.values())
+        dropped = {i for i in train_idx if len(flags[i]) and not flags[i].any()}
+        train_idx = [i for i in train_idx if i not in dropped]
+        print(f"consensus: kept {kept}/{total} filament labels; "
+              f"dropped {len(dropped)} samples with no agreed filament")
     print(f"train samples: {len(train_idx)}  val samples: {len(val_idx)}")
 
-    view_train = MaskRCNNView(base, augment=args.augment)
+    view_train = MaskRCNNView(base, augment=args.augment, flags=flags)
     view_val = MaskRCNNView(base, augment=False)
     kw = dict(collate_fn=collate, num_workers=args.workers, pin_memory=device.type == "cuda")
     train_loader = DataLoader(Subset(view_train, train_idx), batch_size=args.batch_size, shuffle=True, **kw)
     val_loader = DataLoader(Subset(view_val, val_idx), batch_size=args.batch_size, shuffle=False, **kw)
 
-    model = build_model(pretrained=not args.no_pretrained, img_size=args.img_size).to(device)
+    model = build_model(pretrained=not args.no_pretrained, img_size=args.img_size,
+                        anchors=args.anchors).to(device)
     params = [q for q in model.parameters() if q.requires_grad]
     opt = torch.optim.SGD(params, lr=args.lr, momentum=0.9, weight_decay=1e-4)
 
@@ -196,12 +271,13 @@ def main():
         print(f"epoch {epoch}/{args.epochs}  train_loss {run / max(n, 1):.4f}  "
               f"val_loss {vl:.4f}  time {time.time() - t0:.0f}s", flush=True)
 
-        torch.save(model.state_dict(), out / "last.pth")
-        torch.save(model.state_dict(), out / f"epoch_{epoch:02d}.pth")   # pick by PQ, not loss
+        safe_save(model.state_dict(), out / "last.pth")
+        if epoch % args.save_every == 0 or epoch == args.epochs:
+            safe_save(model.state_dict(), out / f"epoch_{epoch:02d}.pth")   # pick by PQ, not loss
         if vl < best:
             best = vl
-            torch.save(model.state_dict(), out / "best_val_loss.pth")
-        torch.save({"model": model.state_dict(), "opt": opt.state_dict(),
+            safe_save(model.state_dict(), out / "best_val_loss.pth")
+        safe_save({"model": model.state_dict(), "opt": opt.state_dict(),
                     "sched": sched.state_dict(), "scaler": scaler.state_dict(),
                     "epoch": epoch, "best": best}, out / "last_full.pth")
     print("done. best val loss:", round(best, 4))

@@ -1,2 +1,10 @@
-*.jpeg
+__pycache__/
+*.pyc
 *.pth
+*.jpg
+*.jpeg
+.ipynb_checkpoints/
+MAGFiLO_1.0_Kaggle_2026/
+New/
+checkpoints*/
+consensus_iou*.json

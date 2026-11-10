@@ -21,11 +21,13 @@ from torchvision.models.detection import (
 )
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
+from torchvision.models.detection.anchor_utils import AnchorGenerator
+from torchvision.models.detection.rpn import RPNHead
 
 NUM_CLASSES = 2  # background + filament
 
 
-def build_model(pretrained=True, img_size=1024, max_detections=100):
+def build_model(pretrained=True, img_size=1024, max_detections=100, anchors='default'):
     weights = MaskRCNN_ResNet50_FPN_Weights.DEFAULT if pretrained else None
     model = maskrcnn_resnet50_fpn(
         weights=weights,
@@ -34,6 +36,17 @@ def build_model(pretrained=True, img_size=1024, max_detections=100):
         box_detections_per_img=max_detections,
         box_score_thresh=0.05,  # keep low here; tune the real threshold on val PQ
     )
+
+    if anchors == 'small':
+        # smaller anchors (16-256 px) and more elongated ratios (1:4 to 4:1) for tiny, thin filaments.
+        # 5 anchors per location instead of 3, so the RPN's two output layers are re-initialised;
+        # the shared 3x3 conv keeps its pretrained weights.
+        gen = AnchorGenerator(sizes=((16,), (32,), (64,), (128,), (256,)),
+                              aspect_ratios=((0.25, 0.5, 1.0, 2.0, 4.0),) * 5)
+        old_head = model.rpn.head
+        model.rpn.anchor_generator = gen
+        model.rpn.head = RPNHead(256, gen.num_anchors_per_location()[0])
+        model.rpn.head.conv.load_state_dict(old_head.conv.state_dict())
 
     in_feats = model.roi_heads.box_predictor.cls_score.in_features
     model.roi_heads.box_predictor = FastRCNNPredictor(in_feats, NUM_CLASSES)

@@ -1,20 +1,18 @@
-# Solar Filament Segmentation Challenge 2026 Submission Repository
+# Solar Filament Segmentation Challenge 2026: Submission Repository
 
 **Team:** Aayusha Singh & Amrit Roy
 **Advisor:** Prof. Azim Ahmadzadeh, University of Missouri–St. Louis
 **Competition:** [Solar Filament Segmentation Challenge 2026](https://www.kaggle.com/competitions/filament-segmentation-2026) (IEEE BigData Cup 2026)
 
-This repository contains our code for the competition: data loading, training, local
-evaluation, inference, and submission-file generation for an instance segmentation model
-(Mask R-CNN) that outlines each solar filament in a 2048×2048 H-Alpha image.
+Code for our entry: data loading, training, local evaluation, inference and
+submission-file generation for a Mask R-CNN instance segmentation model that outlines each
+solar filament in a 2048×2048 H-Alpha image. The 4-page report is `report.pdf`.
 
-## 1. Task
+**Final model:** Mask R-CNN (ResNet50-FPN, COCO-pretrained), flip augmentation, 1280 px input,
+16 epochs, score threshold 0.8, minimum mask area 200 px, overlaps removed.
+**Public leaderboard PQ: 0.36.** Inference: 0.29 s per image on a laptop RTX 4050 (6 GB).
 
-Predict a separate instance mask for every filament in a grayscale H-Alpha image, keeping
-each filament as one object, not merging distinct filaments, and separating filament
-material from background noise. See the competition's Overview tab for the full description.
-
-## 2. Evaluation
+## 1. Evaluation
 
 Submissions are scored mainly by **Panoptic Quality (PQ)**:
 
@@ -24,40 +22,47 @@ SQ = mean IoU over matched pairs
 RQ = |TP| / (|TP| + 0.5|FP| + 0.5|FN|)
 ```
 
-A prediction matches a ground-truth filament when IoU > 0.5. Predicted masks within one
-image **must not overlap**; the platform rejects the submission otherwise. Dice was the
-original metric but was replaced by PQ, so we do not report it.
+A prediction matches a ground-truth filament when IoU > 0.5. Predicted masks within one image
+**must not overlap**; the platform rejects the submission otherwise. `validate.py` reimplements
+this formula (TP, FP and FN pooled over images, as in the organizers' self-evaluation notebook)
+and scores a checkpoint on our held-out split. Dice was replaced by PQ, so we do not report it.
 
-`validate.py` reimplements this formula (TP, FP and FN pooled over images, as in the
-organizers' self-evaluation notebook, and checked on that notebook's toy example) and scores
-a checkpoint on our held-out split.
+We use only the official `train/` data for training and validation.
 
-We use only the official `train/` data for training and validation. All local results come
-from our own held-out split of that data.
-
-## 3. Repository contents
+## 2. Repository contents
 
 ```
 .
 ├── README.md
-├── requirements.txt              # package versions used
-├── dataset.py                    # loads MAGFiLO annotations into per-instance masks
-├── model.py                      # Mask R-CNN builder, predict(), make_disjoint()
-├── train.py                      # training loop, checkpoints, flip augmentation, resume
-├── validate.py                   # local PQ + score-threshold / min-area sweep
-├── inference.py                  # predicts on test/ and writes the submission CSV
-├── check_submission.py           # checks the CSV (ids, RLE decoding, overlaps) before upload
-├── diagnose.py                   # error breakdown by type and filament size
-├── annotator_ceiling.py          # PQ between different annotators of the same image
+├── LICENSE
+├── requirements.txt
+├── report.pdf                      # 4-page report
+├── pipeline.ipynb                  # end-to-end notebook (validate, predict, check, plot)
+├── dataset.py                      # loads MAGFiLO annotations into per-instance masks
+├── model.py                        # Mask R-CNN builder, predict(), make_disjoint()
+├── train.py                        # training loop (flips, resume, optional consensus / anchors)
+├── validate.py                     # local PQ + score-threshold / min-area sweep
+├── inference.py                    # predicts on test/ and writes the submission CSV
+├── check_submission.py             # checks the CSV (ids, RLE decoding, overlaps) before upload
+├── submission_1280.csv             # final submission file (public PQ 0.36)
 ├── self-evaluation-notebook.ipynb  # provided by the organizers
-├── pipeline.ipynb                # [TODO] end-to-end notebook
-├── checkpoints/                  # [TODO] final weights or a download link
-└── report.pdf                    # 4-page report
+│
+├── diagnose.py                     # error breakdown by type and filament size
+├── annotator_ceiling.py            # PQ between different annotators of the same image
+├── check_anchors.py                # how well default anchors fit our filament boxes
+├── check_offdisk.py                # are any predictions outside the solar disk?
+├── make_figure.py                  # annotation vs prediction figure
+├── dataanalysis.py                 # early analysis: annotator disagreement, touching/overlap
+├── decode-filaments.py             # polygon-to-mask decoding and visual check
+├── test_dataset.py                 # synthetic smoke test for dataset.py
+├── check_labels.py                 # checks which fields annotations have (is chirality stored as chirality or category_id?)
+├── mask_overlay_check.png          # output of the visual check
+└── logs/                           # training logs of every run in the report
 ```
 
-## 4. Data
+## 3. Data
 
-Download from the competition's Data tab and place as:
+Download from the competition's Data tab (the data are **not** included here) and place as:
 
 ```
 MAGFiLO_1.0_Kaggle_2026/
@@ -68,83 +73,84 @@ MAGFiLO_1.0_Kaggle_2026/
     └── test_images/
 ```
 
-Data-handling decisions:
-- Images are 2048×2048 grayscale, scaled to [0, 1] and **replicated to three channels** to
-  match the pretrained backbone. The detector applies ImageNet normalization and resizes
-  the image internally to the network input size.
-- **No deduplication by file name.** Repeated annotator passes of one image are kept as
-  separate samples, as the organizers instruct.
+- Images are 2048×2048 grayscale, scaled to [0, 1] and **replicated to three channels** to match
+  the pretrained backbone. The detector applies ImageNet normalization and resizes the image
+  internally to the network input size.
+- **No deduplication by file name.** Repeated annotator passes of one image are kept as separate
+  samples, as the organizers instruct.
 - Each annotation is one polygon for one filament. `category_id` (chirality) is not used.
   Boxes are computed from the masks and every filament gets one class label.
-- Validation split: 10% of the **files** (seed 0), so no image appears in both training and
-  validation.
+- Validation split: 10% of the **files** (seed 0), so no image is in both training and validation.
 
-## 5. Pipeline
+## 4. Method
 
-1. **Preprocessing:** as in section 4.
-2. **Architecture:** torchvision Mask R-CNN, ResNet50-FPN backbone, COCO-pretrained, with
-   new two-class box and mask predictors (background, filament).
-3. **Loss:** the standard Mask R-CNN losses (RPN objectness and box, ROI classification and
-   box, mask), summed. We did not implement Tversky or clDice losses.
-4. **Training:** SGD (momentum 0.9, lr 0.005, weight decay 1e-4), linear warmup then cosine
-   decay, batch size 1, mixed precision, gradient clipping at 10, random horizontal and
-   vertical flips, [final: 20 epochs at 1024 px / 16 epochs at 1280 px].
-5. **Post-processing:** keep predictions above a score threshold, binarize masks at 0.5,
-   drop masks below a minimum area, and make masks disjoint by giving contested pixels to
-   the higher-scoring instance. We have no separate step targeting fragmentation or
-   over-merging.
-6. **Inference:** `inference.py` writes one CSV row per predicted filament, with the mask
-   encoded as compressed RLE (`pycocotools`).
+1. **Architecture:** torchvision Mask R-CNN, ResNet50-FPN, COCO-pretrained, new two-class
+   box and mask predictors (background, filament).
+2. **Loss:** the standard Mask R-CNN losses, summed. No custom loss.
+3. **Training:** SGD (momentum 0.9, lr 0.005, weight decay 1e-4), linear warmup then cosine
+   decay, batch size 1, mixed precision, gradient clipping at 10, random horizontal and vertical
+   flips, 16 epochs at 1280 px.
+4. **Post-processing:** keep predictions with score >= 0.8, binarize masks at 0.5, drop masks
+   smaller than 200 px, and make masks disjoint by giving contested pixels to the
+   higher-scoring instance. No separate step targets fragmentation or over-merging.
+5. **Inference:** one CSV row per predicted filament, mask encoded as compressed RLE (`pycocotools`).
 
-## 6. Reproducing results
+## 5. Reproducing the results
 
 ```bash
 pip install -r requirements.txt
 
-# train (about 90 min on a 6 GB laptop GPU at 1024 px)
-python train.py --root <data path> --epochs 20 --img-size 1024 --batch-size 1 \
-    --augment --out checkpoints_aug
+# train the final model (about 2 hours on a 6 GB laptop GPU)
+python train.py --root <data path> --epochs 16 --img-size 1280 --batch-size 1 \
+    --augment --out checkpoints_1280
 
-# score a checkpoint and pick the score threshold / minimum area
-python validate.py --root <data path> --ckpt checkpoints_aug/last.pth
+# score it (also prints the best score threshold / minimum area)
+python validate.py --root <data path> --ckpt checkpoints_1280/epoch_16.pth --img-size 1280
 
 # write and check the submission file
-python inference.py --root <data path> --ckpt <checkpoint> \
-    --score-thresh 0.9 --min-area 50 --out submission.csv
+python inference.py --root <data path> --ckpt checkpoints_1280/epoch_16.pth --img-size 1280 \
+    --score-thresh 0.8 --min-area 200 --out submission.csv
 python check_submission.py --root <data path> --csv submission.csv
 ```
 
-[TODO: `pipeline.ipynb` runs the same sequence end to end.]
+`pipeline.ipynb` runs the validation, prediction and checking steps end to end.
 
-## 7. Submission format
+**Weights:** the final checkpoint (`epoch_16.pth`, 170 MB) is too large for the repository.
+Download: **[TODO: link]** and place it at `checkpoints_1280/epoch_16.pth`.
 
-| filament_id | segmentation_rle |
-|---|---|
+## 6. Submission format
+
+| filament_id      | segmentation_rle  |
+|------------------|-------------------|
 | `<image_stem>_1` | RLE counts string |
 | `<image_stem>_2` | RLE counts string |
 
-`segmentation_rle` is the RLE counts string only (masks are 2048×2048), with no quotation
-marks. Images with no kept prediction have no rows.
+`segmentation_rle` is the RLE counts string only (masks are 2048×2048), with no quotation marks.
+Images with no kept prediction have no rows.
 
-## 8. Results
+## 7. Results
+
+Local PQ is on our validation split (116 samples) with disjoint masks; each row uses its best
+score threshold. Public PQ is the Kaggle leaderboard value.
 
 | Model | Local PQ | Public PQ |
 |---|---|---|
-| Mask R-CNN, 12 epochs, no augmentation | 0.357 | 0.34 |
+| Mask R-CNN, 1024 px, 12 epochs, no augmentation | 0.357 | 0.34 |
 | + flip augmentation, 20 epochs (epoch 17) | 0.389 | 0.34 |
-| [1280 px input, flips, 16 epochs] | [TBD] | [TBD] |
+| **1280 px, flips, 16 epochs (final)** | **0.393** | **0.36** |
+| 1280 px + consensus labels (not submitted) | 0.388 | not submitted |
+| 1280 px + small anchors (not submitted) | 0.387 | not submitted |
 
-Inference takes 0.19 s per image (35 s for the 180 test images, including image loading and
-RLE encoding) on a laptop RTX 4050 GPU with 6 GB of memory. Between two human annotators of
-the same image we measure a PQ of 0.34 (`annotator_ceiling.py`). Details and caveats are in
-`report.pdf`.
+Between two human annotators of the same image we measure a PQ of 0.34
+(`annotator_ceiling.py`). Differences of about 0.01 in local PQ are within the noise of our small
+validation split. Details and caveats are in `report.pdf`.
 
-## 9. Open access and license
+## 8. Open access and license
 
-This repository is public per the competition's open-access requirement and will remain
-public at least until winners are announced (Nov 30, 2026). License: [TBD].
+This repository is public per the competition's open-access requirement and will stay public at
+least until winners are announced (Nov 30, 2026). License: **[TODO: e.g. MIT, see LICENSE]**.
 
-## 10. Citation
+## 9. Citation
 
 ```
 Azim Ahmadzadeh, Dustin J. Kempton, Qin Li, and Alexei A. Pevtsov.
