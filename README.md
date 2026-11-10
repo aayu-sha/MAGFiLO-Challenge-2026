@@ -38,6 +38,9 @@ We use only the official `train/` data for training and validation.
 ├── requirements.txt
 ├── report.pdf                      # 4-page report
 ├── pipeline.ipynb                  # end-to-end notebook (validate, predict, check, plot)
+├── weights/
+│   └── maskrcnn_1280_final_fp16.pth  # final model weights (fp16, 85 MB), loaded by the notebook
+├── make_release_weights.py         # converts a trained checkpoint to the stored fp16 weights
 ├── dataset.py                      # loads MAGFiLO annotations into per-instance masks
 ├── model.py                        # Mask R-CNN builder, predict(), make_disjoint()
 ├── train.py                        # training loop (flips, resume, optional consensus / anchors)
@@ -105,18 +108,20 @@ python train.py --root <data path> --epochs 16 --img-size 1280 --batch-size 1 \
     --augment --out checkpoints_1280
 
 # score it (also prints the best score threshold / minimum area)
-python validate.py --root <data path> --ckpt checkpoints_1280/epoch_16.pth --img-size 1280
+python validate.py --root <data path> --ckpt weights/maskrcnn_1280_final_fp16.pth --img-size 1280
 
 # write and check the submission file
-python inference.py --root <data path> --ckpt checkpoints_1280/epoch_16.pth --img-size 1280 \
+python inference.py --root <data path> --ckpt weights/maskrcnn_1280_final_fp16.pth --img-size 1280 \
     --score-thresh 0.8 --min-area 200 --out submission.csv
 python check_submission.py --root <data path> --csv submission.csv
 ```
 
 `pipeline.ipynb` runs the validation, prediction and checking steps end to end.
 
-**Weights:** the final checkpoint (`epoch_16.pth`, 170 MB) is too large for the repository.
-Download: **[TODO: link]** and place it at `checkpoints_1280/epoch_16.pth`.
+**Weights:** the final model is stored in this repository at `weights/maskrcnn_1280_final_fp16.pth` (fp16 to stay
+under GitHub's 100 MB file limit; cast to fp32 on loading). No training is needed to reproduce the predictions:
+`pipeline.ipynb` loads these weights, scores the validation split, writes `submission.csv` and compares it with
+`submission_1280.csv`, the file we uploaded to Kaggle. Only the competition data (not included) must be downloaded.
 
 ## 6. Submission format
 
@@ -148,7 +153,7 @@ validation split. Details and caveats are in `report.pdf`.
 ## 8. Open access and license
 
 This repository is public per the competition's open-access requirement and will stay public at
-least until winners are announced (Nov 30, 2026). License: **[TODO: e.g. MIT, see LICENSE]**.
+least until winners are announced (Nov 30, 2026). License: MIT (see `LICENSE`).
 
 ## 9. Citation
 
