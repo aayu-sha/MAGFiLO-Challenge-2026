@@ -1,5 +1,393 @@
-usage: train.py [-h] --root ROOT [--img-size IMG_SIZE]
-                [--batch-size BATCH_SIZE] [--epochs EPOCHS] [--lr LR]
-                [--val-frac VAL_FRAC] [--subset SUBSET] [--workers WORKERS]
-                [--seed SEED] [--out OUT] [--no-pretrained] [--resume RESUME]
-train.py: error: unrecognized arguments: --augment
+device: cuda
+train samples: 1038  val samples: 116
+/home/aayusha/Documents/GitHub/MAGFiLO-Challenge-2026/train.py:187: UserWarning: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+  sched.step()
+  epoch 1 it 50/1038  loss 1.6593  0.26s/it  epoch ETA 4.3 min
+  epoch 1 it 100/1038  loss 1.3261  0.24s/it  epoch ETA 3.7 min
+  epoch 1 it 150/1038  loss 1.2054  0.23s/it  epoch ETA 3.4 min
+  epoch 1 it 200/1038  loss 1.1447  0.23s/it  epoch ETA 3.2 min
+  epoch 1 it 250/1038  loss 1.1115  0.23s/it  epoch ETA 3.0 min
+  epoch 1 it 300/1038  loss 1.0793  0.23s/it  epoch ETA 2.8 min
+  epoch 1 it 350/1038  loss 1.0696  0.23s/it  epoch ETA 2.6 min
+  epoch 1 it 400/1038  loss 1.0564  0.23s/it  epoch ETA 2.4 min
+  epoch 1 it 450/1038  loss 1.0452  0.23s/it  epoch ETA 2.2 min
+  epoch 1 it 500/1038  loss 1.0297  0.22s/it  epoch ETA 2.0 min
+  epoch 1 it 550/1038  loss 1.0221  0.22s/it  epoch ETA 1.8 min
+  epoch 1 it 600/1038  loss 1.0147  0.22s/it  epoch ETA 1.6 min
+  epoch 1 it 650/1038  loss 1.0080  0.22s/it  epoch ETA 1.4 min
+  epoch 1 it 700/1038  loss 1.0018  0.22s/it  epoch ETA 1.2 min
+  epoch 1 it 750/1038  loss 0.9933  0.22s/it  epoch ETA 1.1 min
+  epoch 1 it 800/1038  loss 0.9837  0.22s/it  epoch ETA 0.9 min
+  epoch 1 it 850/1038  loss 0.9719  0.22s/it  epoch ETA 0.7 min
+  epoch 1 it 900/1038  loss 0.9667  0.22s/it  epoch ETA 0.5 min
+  epoch 1 it 950/1038  loss 0.9636  0.22s/it  epoch ETA 0.3 min
+  epoch 1 it 1000/1038  loss 0.9606  0.22s/it  epoch ETA 0.1 min
+epoch 1/20  train_loss 0.9556  val_loss 0.9253  time 244s
+  epoch 2 it 50/1038  loss 0.8614  0.23s/it  epoch ETA 3.8 min
+  epoch 2 it 100/1038  loss 0.8897  0.22s/it  epoch ETA 3.5 min
+  epoch 2 it 150/1038  loss 0.8741  0.22s/it  epoch ETA 3.3 min
+  epoch 2 it 200/1038  loss 0.8655  0.22s/it  epoch ETA 3.1 min
+  epoch 2 it 250/1038  loss 0.8640  0.22s/it  epoch ETA 2.9 min
+  epoch 2 it 300/1038  loss 0.8572  0.22s/it  epoch ETA 2.7 min
+  epoch 2 it 350/1038  loss 0.8636  0.22s/it  epoch ETA 2.5 min
+  epoch 2 it 400/1038  loss 0.8728  0.22s/it  epoch ETA 2.3 min
+  epoch 2 it 450/1038  loss 0.8676  0.22s/it  epoch ETA 2.1 min
+  epoch 2 it 500/1038  loss 0.8674  0.22s/it  epoch ETA 1.9 min
+  epoch 2 it 550/1038  loss 0.8674  0.22s/it  epoch ETA 1.8 min
+  epoch 2 it 600/1038  loss 0.8699  0.22s/it  epoch ETA 1.6 min
+  epoch 2 it 650/1038  loss 0.8626  0.22s/it  epoch ETA 1.4 min
+  epoch 2 it 700/1038  loss 0.8580  0.21s/it  epoch ETA 1.2 min
+  epoch 2 it 750/1038  loss 0.8522  0.21s/it  epoch ETA 1.0 min
+  epoch 2 it 800/1038  loss 0.8520  0.21s/it  epoch ETA 0.9 min
+  epoch 2 it 850/1038  loss 0.8546  0.21s/it  epoch ETA 0.7 min
+  epoch 2 it 900/1038  loss 0.8520  0.21s/it  epoch ETA 0.5 min
+  epoch 2 it 950/1038  loss 0.8532  0.21s/it  epoch ETA 0.3 min
+  epoch 2 it 1000/1038  loss 0.8488  0.21s/it  epoch ETA 0.1 min
+epoch 2/20  train_loss 0.8500  val_loss 0.8994  time 239s
+  epoch 3 it 50/1038  loss 0.7518  0.22s/it  epoch ETA 3.7 min
+  epoch 3 it 100/1038  loss 0.8139  0.22s/it  epoch ETA 3.4 min
+  epoch 3 it 150/1038  loss 0.8302  0.22s/it  epoch ETA 3.2 min
+  epoch 3 it 200/1038  loss 0.8494  0.22s/it  epoch ETA 3.1 min
+  epoch 3 it 250/1038  loss 0.8302  0.22s/it  epoch ETA 2.8 min
+  epoch 3 it 300/1038  loss 0.8302  0.22s/it  epoch ETA 2.7 min
+  epoch 3 it 350/1038  loss 0.8360  0.22s/it  epoch ETA 2.5 min
+  epoch 3 it 400/1038  loss 0.8276  0.22s/it  epoch ETA 2.3 min
+  epoch 3 it 450/1038  loss 0.8201  0.22s/it  epoch ETA 2.1 min
+  epoch 3 it 500/1038  loss 0.8240  0.22s/it  epoch ETA 1.9 min
+  epoch 3 it 550/1038  loss 0.8189  0.22s/it  epoch ETA 1.8 min
+  epoch 3 it 600/1038  loss 0.8191  0.22s/it  epoch ETA 1.6 min
+  epoch 3 it 650/1038  loss 0.8148  0.21s/it  epoch ETA 1.4 min
+  epoch 3 it 700/1038  loss 0.8139  0.21s/it  epoch ETA 1.2 min
+  epoch 3 it 750/1038  loss 0.8134  0.21s/it  epoch ETA 1.0 min
+  epoch 3 it 800/1038  loss 0.8089  0.21s/it  epoch ETA 0.9 min
+  epoch 3 it 850/1038  loss 0.8034  0.21s/it  epoch ETA 0.7 min
+  epoch 3 it 900/1038  loss 0.8061  0.21s/it  epoch ETA 0.5 min
+  epoch 3 it 950/1038  loss 0.8070  0.21s/it  epoch ETA 0.3 min
+  epoch 3 it 1000/1038  loss 0.8122  0.21s/it  epoch ETA 0.1 min
+epoch 3/20  train_loss 0.8153  val_loss 0.8934  time 240s
+  epoch 4 it 50/1038  loss 0.7691  0.23s/it  epoch ETA 3.7 min
+  epoch 4 it 100/1038  loss 0.7705  0.22s/it  epoch ETA 3.5 min
+  epoch 4 it 150/1038  loss 0.7966  0.22s/it  epoch ETA 3.3 min
+  epoch 4 it 200/1038  loss 0.8056  0.22s/it  epoch ETA 3.0 min
+  epoch 4 it 250/1038  loss 0.7890  0.22s/it  epoch ETA 2.8 min
+  epoch 4 it 300/1038  loss 0.7906  0.22s/it  epoch ETA 2.7 min
+  epoch 4 it 350/1038  loss 0.7864  0.22s/it  epoch ETA 2.5 min
+  epoch 4 it 400/1038  loss 0.7784  0.22s/it  epoch ETA 2.3 min
+  epoch 4 it 450/1038  loss 0.7888  0.22s/it  epoch ETA 2.1 min
+  epoch 4 it 500/1038  loss 0.7896  0.22s/it  epoch ETA 1.9 min
+  epoch 4 it 550/1038  loss 0.7884  0.22s/it  epoch ETA 1.8 min
+  epoch 4 it 600/1038  loss 0.7839  0.21s/it  epoch ETA 1.6 min
+  epoch 4 it 650/1038  loss 0.7847  0.21s/it  epoch ETA 1.4 min
+  epoch 4 it 700/1038  loss 0.7924  0.21s/it  epoch ETA 1.2 min
+  epoch 4 it 750/1038  loss 0.7919  0.21s/it  epoch ETA 1.0 min
+  epoch 4 it 800/1038  loss 0.7881  0.21s/it  epoch ETA 0.9 min
+  epoch 4 it 850/1038  loss 0.7914  0.21s/it  epoch ETA 0.7 min
+  epoch 4 it 900/1038  loss 0.7903  0.21s/it  epoch ETA 0.5 min
+  epoch 4 it 950/1038  loss 0.7905  0.21s/it  epoch ETA 0.3 min
+  epoch 4 it 1000/1038  loss 0.7886  0.21s/it  epoch ETA 0.1 min
+epoch 4/20  train_loss 0.7856  val_loss 0.8837  time 240s
+  epoch 5 it 50/1038  loss 0.7805  0.22s/it  epoch ETA 3.7 min
+  epoch 5 it 100/1038  loss 0.7751  0.22s/it  epoch ETA 3.4 min
+  epoch 5 it 150/1038  loss 0.7735  0.22s/it  epoch ETA 3.2 min
+  epoch 5 it 200/1038  loss 0.7856  0.22s/it  epoch ETA 3.0 min
+  epoch 5 it 250/1038  loss 0.7811  0.22s/it  epoch ETA 2.9 min
+  epoch 5 it 300/1038  loss 0.7934  0.22s/it  epoch ETA 2.7 min
+  epoch 5 it 350/1038  loss 0.7885  0.22s/it  epoch ETA 2.5 min
+  epoch 5 it 400/1038  loss 0.7862  0.22s/it  epoch ETA 2.3 min
+  epoch 5 it 450/1038  loss 0.7850  0.22s/it  epoch ETA 2.1 min
+  epoch 5 it 500/1038  loss 0.7846  0.22s/it  epoch ETA 1.9 min
+  epoch 5 it 550/1038  loss 0.7815  0.22s/it  epoch ETA 1.8 min
+  epoch 5 it 600/1038  loss 0.7804  0.22s/it  epoch ETA 1.6 min
+  epoch 5 it 650/1038  loss 0.7775  0.22s/it  epoch ETA 1.4 min
+  epoch 5 it 700/1038  loss 0.7761  0.22s/it  epoch ETA 1.2 min
+  epoch 5 it 750/1038  loss 0.7750  0.22s/it  epoch ETA 1.0 min
+  epoch 5 it 800/1038  loss 0.7747  0.22s/it  epoch ETA 0.9 min
+  epoch 5 it 850/1038  loss 0.7759  0.22s/it  epoch ETA 0.7 min
+  epoch 5 it 900/1038  loss 0.7723  0.22s/it  epoch ETA 0.5 min
+  epoch 5 it 950/1038  loss 0.7720  0.22s/it  epoch ETA 0.3 min
+  epoch 5 it 1000/1038  loss 0.7712  0.22s/it  epoch ETA 0.1 min
+epoch 5/20  train_loss 0.7714  val_loss 0.8543  time 241s
+  epoch 6 it 50/1038  loss 0.7754  0.23s/it  epoch ETA 3.8 min
+  epoch 6 it 100/1038  loss 0.7215  0.22s/it  epoch ETA 3.5 min
+  epoch 6 it 150/1038  loss 0.7359  0.22s/it  epoch ETA 3.2 min
+  epoch 6 it 200/1038  loss 0.7348  0.22s/it  epoch ETA 3.0 min
+  epoch 6 it 250/1038  loss 0.7388  0.22s/it  epoch ETA 2.9 min
+  epoch 6 it 300/1038  loss 0.7378  0.22s/it  epoch ETA 2.7 min
+  epoch 6 it 350/1038  loss 0.7379  0.22s/it  epoch ETA 2.5 min
+  epoch 6 it 400/1038  loss 0.7337  0.22s/it  epoch ETA 2.3 min
+  epoch 6 it 450/1038  loss 0.7333  0.22s/it  epoch ETA 2.1 min
+  epoch 6 it 500/1038  loss 0.7368  0.22s/it  epoch ETA 1.9 min
+  epoch 6 it 550/1038  loss 0.7350  0.22s/it  epoch ETA 1.8 min
+  epoch 6 it 600/1038  loss 0.7388  0.22s/it  epoch ETA 1.6 min
+  epoch 6 it 650/1038  loss 0.7460  0.22s/it  epoch ETA 1.4 min
+  epoch 6 it 700/1038  loss 0.7507  0.22s/it  epoch ETA 1.2 min
+  epoch 6 it 750/1038  loss 0.7534  0.22s/it  epoch ETA 1.0 min
+  epoch 6 it 800/1038  loss 0.7550  0.22s/it  epoch ETA 0.9 min
+  epoch 6 it 850/1038  loss 0.7534  0.22s/it  epoch ETA 0.7 min
+  epoch 6 it 900/1038  loss 0.7533  0.22s/it  epoch ETA 0.5 min
+  epoch 6 it 950/1038  loss 0.7527  0.22s/it  epoch ETA 0.3 min
+  epoch 6 it 1000/1038  loss 0.7541  0.22s/it  epoch ETA 0.1 min
+epoch 6/20  train_loss 0.7508  val_loss 0.8924  time 241s
+  epoch 7 it 50/1038  loss 0.7728  0.22s/it  epoch ETA 3.7 min
+  epoch 7 it 100/1038  loss 0.7616  0.22s/it  epoch ETA 3.4 min
+  epoch 7 it 150/1038  loss 0.7565  0.22s/it  epoch ETA 3.2 min
+  epoch 7 it 200/1038  loss 0.7814  0.22s/it  epoch ETA 3.1 min
+  epoch 7 it 250/1038  loss 0.7817  0.22s/it  epoch ETA 2.9 min
+  epoch 7 it 300/1038  loss 0.7762  0.22s/it  epoch ETA 2.7 min
+  epoch 7 it 350/1038  loss 0.7779  0.22s/it  epoch ETA 2.5 min
+  epoch 7 it 400/1038  loss 0.7757  0.22s/it  epoch ETA 2.3 min
+  epoch 7 it 450/1038  loss 0.7622  0.22s/it  epoch ETA 2.1 min
+  epoch 7 it 500/1038  loss 0.7627  0.22s/it  epoch ETA 1.9 min
+  epoch 7 it 550/1038  loss 0.7570  0.22s/it  epoch ETA 1.8 min
+  epoch 7 it 600/1038  loss 0.7520  0.22s/it  epoch ETA 1.6 min
+  epoch 7 it 650/1038  loss 0.7576  0.22s/it  epoch ETA 1.4 min
+  epoch 7 it 700/1038  loss 0.7518  0.22s/it  epoch ETA 1.2 min
+  epoch 7 it 750/1038  loss 0.7492  0.22s/it  epoch ETA 1.0 min
+  epoch 7 it 800/1038  loss 0.7492  0.22s/it  epoch ETA 0.9 min
+  epoch 7 it 850/1038  loss 0.7441  0.22s/it  epoch ETA 0.7 min
+  epoch 7 it 900/1038  loss 0.7453  0.22s/it  epoch ETA 0.5 min
+  epoch 7 it 950/1038  loss 0.7415  0.22s/it  epoch ETA 0.3 min
+  epoch 7 it 1000/1038  loss 0.7397  0.22s/it  epoch ETA 0.1 min
+epoch 7/20  train_loss 0.7380  val_loss 0.8588  time 241s
+  epoch 8 it 50/1038  loss 0.7507  0.23s/it  epoch ETA 3.7 min
+  epoch 8 it 100/1038  loss 0.7436  0.22s/it  epoch ETA 3.5 min
+  epoch 8 it 150/1038  loss 0.7372  0.22s/it  epoch ETA 3.2 min
+  epoch 8 it 200/1038  loss 0.7334  0.22s/it  epoch ETA 3.1 min
+  epoch 8 it 250/1038  loss 0.7266  0.22s/it  epoch ETA 2.9 min
+  epoch 8 it 300/1038  loss 0.7112  0.22s/it  epoch ETA 2.7 min
+  epoch 8 it 350/1038  loss 0.7188  0.22s/it  epoch ETA 2.5 min
+  epoch 8 it 400/1038  loss 0.7155  0.22s/it  epoch ETA 2.3 min
+  epoch 8 it 450/1038  loss 0.7171  0.22s/it  epoch ETA 2.1 min
+  epoch 8 it 500/1038  loss 0.7174  0.22s/it  epoch ETA 1.9 min
+  epoch 8 it 550/1038  loss 0.7100  0.22s/it  epoch ETA 1.8 min
+  epoch 8 it 600/1038  loss 0.7136  0.22s/it  epoch ETA 1.6 min
+  epoch 8 it 650/1038  loss 0.7137  0.22s/it  epoch ETA 1.4 min
+  epoch 8 it 700/1038  loss 0.7143  0.22s/it  epoch ETA 1.2 min
+  epoch 8 it 750/1038  loss 0.7185  0.22s/it  epoch ETA 1.0 min
+  epoch 8 it 800/1038  loss 0.7185  0.22s/it  epoch ETA 0.9 min
+  epoch 8 it 850/1038  loss 0.7180  0.22s/it  epoch ETA 0.7 min
+  epoch 8 it 900/1038  loss 0.7165  0.22s/it  epoch ETA 0.5 min
+  epoch 8 it 950/1038  loss 0.7175  0.22s/it  epoch ETA 0.3 min
+  epoch 8 it 1000/1038  loss 0.7163  0.22s/it  epoch ETA 0.1 min
+epoch 8/20  train_loss 0.7187  val_loss 0.8737  time 242s
+  epoch 9 it 50/1038  loss 0.7106  0.23s/it  epoch ETA 3.7 min
+  epoch 9 it 100/1038  loss 0.7112  0.22s/it  epoch ETA 3.5 min
+  epoch 9 it 150/1038  loss 0.7239  0.22s/it  epoch ETA 3.3 min
+  epoch 9 it 200/1038  loss 0.7133  0.22s/it  epoch ETA 3.1 min
+  epoch 9 it 250/1038  loss 0.7021  0.22s/it  epoch ETA 2.9 min
+  epoch 9 it 300/1038  loss 0.7072  0.22s/it  epoch ETA 2.7 min
+  epoch 9 it 350/1038  loss 0.7007  0.22s/it  epoch ETA 2.5 min
+  epoch 9 it 400/1038  loss 0.6970  0.22s/it  epoch ETA 2.3 min
+  epoch 9 it 450/1038  loss 0.6973  0.22s/it  epoch ETA 2.1 min
+  epoch 9 it 500/1038  loss 0.6978  0.22s/it  epoch ETA 1.9 min
+  epoch 9 it 550/1038  loss 0.7015  0.22s/it  epoch ETA 1.8 min
+  epoch 9 it 600/1038  loss 0.6985  0.22s/it  epoch ETA 1.6 min
+  epoch 9 it 650/1038  loss 0.6990  0.22s/it  epoch ETA 1.4 min
+  epoch 9 it 700/1038  loss 0.6965  0.22s/it  epoch ETA 1.2 min
+  epoch 9 it 750/1038  loss 0.6983  0.22s/it  epoch ETA 1.0 min
+  epoch 9 it 800/1038  loss 0.6966  0.22s/it  epoch ETA 0.9 min
+  epoch 9 it 850/1038  loss 0.6947  0.22s/it  epoch ETA 0.7 min
+  epoch 9 it 900/1038  loss 0.6949  0.22s/it  epoch ETA 0.5 min
+  epoch 9 it 950/1038  loss 0.6967  0.22s/it  epoch ETA 0.3 min
+  epoch 9 it 1000/1038  loss 0.6994  0.22s/it  epoch ETA 0.1 min
+epoch 9/20  train_loss 0.7018  val_loss 0.8659  time 242s
+  epoch 10 it 50/1038  loss 0.7104  0.23s/it  epoch ETA 3.7 min
+  epoch 10 it 100/1038  loss 0.6906  0.22s/it  epoch ETA 3.4 min
+  epoch 10 it 150/1038  loss 0.6730  0.22s/it  epoch ETA 3.2 min
+  epoch 10 it 200/1038  loss 0.6848  0.22s/it  epoch ETA 3.1 min
+  epoch 10 it 250/1038  loss 0.6882  0.22s/it  epoch ETA 2.9 min
+  epoch 10 it 300/1038  loss 0.6866  0.22s/it  epoch ETA 2.7 min
+  epoch 10 it 350/1038  loss 0.6849  0.22s/it  epoch ETA 2.5 min
+  epoch 10 it 400/1038  loss 0.6886  0.22s/it  epoch ETA 2.3 min
+  epoch 10 it 450/1038  loss 0.6904  0.22s/it  epoch ETA 2.1 min
+  epoch 10 it 500/1038  loss 0.6850  0.22s/it  epoch ETA 1.9 min
+  epoch 10 it 550/1038  loss 0.6895  0.22s/it  epoch ETA 1.8 min
+  epoch 10 it 600/1038  loss 0.6891  0.22s/it  epoch ETA 1.6 min
+  epoch 10 it 650/1038  loss 0.6876  0.22s/it  epoch ETA 1.4 min
+  epoch 10 it 700/1038  loss 0.6880  0.22s/it  epoch ETA 1.2 min
+  epoch 10 it 750/1038  loss 0.6888  0.22s/it  epoch ETA 1.0 min
+  epoch 10 it 800/1038  loss 0.6899  0.22s/it  epoch ETA 0.9 min
+  epoch 10 it 850/1038  loss 0.6871  0.22s/it  epoch ETA 0.7 min
+  epoch 10 it 900/1038  loss 0.6874  0.22s/it  epoch ETA 0.5 min
+  epoch 10 it 950/1038  loss 0.6882  0.22s/it  epoch ETA 0.3 min
+  epoch 10 it 1000/1038  loss 0.6876  0.22s/it  epoch ETA 0.1 min
+epoch 10/20  train_loss 0.6891  val_loss 0.8569  time 243s
+  epoch 11 it 50/1038  loss 0.6611  0.23s/it  epoch ETA 3.9 min
+  epoch 11 it 100/1038  loss 0.6683  0.22s/it  epoch ETA 3.5 min
+  epoch 11 it 150/1038  loss 0.6799  0.22s/it  epoch ETA 3.3 min
+  epoch 11 it 200/1038  loss 0.6700  0.22s/it  epoch ETA 3.1 min
+  epoch 11 it 250/1038  loss 0.6714  0.22s/it  epoch ETA 2.9 min
+  epoch 11 it 300/1038  loss 0.6698  0.22s/it  epoch ETA 2.7 min
+  epoch 11 it 350/1038  loss 0.6676  0.22s/it  epoch ETA 2.5 min
+  epoch 11 it 400/1038  loss 0.6693  0.22s/it  epoch ETA 2.3 min
+  epoch 11 it 450/1038  loss 0.6685  0.22s/it  epoch ETA 2.1 min
+  epoch 11 it 500/1038  loss 0.6700  0.22s/it  epoch ETA 2.0 min
+  epoch 11 it 550/1038  loss 0.6704  0.22s/it  epoch ETA 1.8 min
+  epoch 11 it 600/1038  loss 0.6687  0.22s/it  epoch ETA 1.6 min
+  epoch 11 it 650/1038  loss 0.6734  0.22s/it  epoch ETA 1.4 min
+  epoch 11 it 700/1038  loss 0.6734  0.22s/it  epoch ETA 1.2 min
+  epoch 11 it 750/1038  loss 0.6729  0.22s/it  epoch ETA 1.0 min
+  epoch 11 it 800/1038  loss 0.6724  0.22s/it  epoch ETA 0.9 min
+  epoch 11 it 850/1038  loss 0.6747  0.22s/it  epoch ETA 0.7 min
+  epoch 11 it 900/1038  loss 0.6727  0.22s/it  epoch ETA 0.5 min
+  epoch 11 it 950/1038  loss 0.6727  0.22s/it  epoch ETA 0.3 min
+  epoch 11 it 1000/1038  loss 0.6721  0.22s/it  epoch ETA 0.1 min
+epoch 11/20  train_loss 0.6741  val_loss 0.8748  time 244s
+  epoch 12 it 50/1038  loss 0.6170  0.23s/it  epoch ETA 3.7 min
+  epoch 12 it 100/1038  loss 0.6359  0.22s/it  epoch ETA 3.5 min
+  epoch 12 it 150/1038  loss 0.6335  0.22s/it  epoch ETA 3.2 min
+  epoch 12 it 200/1038  loss 0.6402  0.22s/it  epoch ETA 3.1 min
+  epoch 12 it 250/1038  loss 0.6579  0.22s/it  epoch ETA 2.9 min
+  epoch 12 it 300/1038  loss 0.6589  0.22s/it  epoch ETA 2.7 min
+  epoch 12 it 350/1038  loss 0.6581  0.22s/it  epoch ETA 2.5 min
+  epoch 12 it 400/1038  loss 0.6533  0.22s/it  epoch ETA 2.3 min
+  epoch 12 it 450/1038  loss 0.6463  0.22s/it  epoch ETA 2.1 min
+  epoch 12 it 500/1038  loss 0.6507  0.22s/it  epoch ETA 2.0 min
+  epoch 12 it 550/1038  loss 0.6466  0.22s/it  epoch ETA 1.8 min
+  epoch 12 it 600/1038  loss 0.6454  0.22s/it  epoch ETA 1.6 min
+  epoch 12 it 650/1038  loss 0.6451  0.22s/it  epoch ETA 1.4 min
+  epoch 12 it 700/1038  loss 0.6460  0.22s/it  epoch ETA 1.2 min
+  epoch 12 it 750/1038  loss 0.6494  0.22s/it  epoch ETA 1.0 min
+  epoch 12 it 800/1038  loss 0.6514  0.22s/it  epoch ETA 0.9 min
+  epoch 12 it 850/1038  loss 0.6516  0.22s/it  epoch ETA 0.7 min
+  epoch 12 it 900/1038  loss 0.6520  0.22s/it  epoch ETA 0.5 min
+  epoch 12 it 950/1038  loss 0.6551  0.22s/it  epoch ETA 0.3 min
+  epoch 12 it 1000/1038  loss 0.6546  0.22s/it  epoch ETA 0.1 min
+epoch 12/20  train_loss 0.6549  val_loss 0.8408  time 243s
+  epoch 13 it 50/1038  loss 0.6060  0.23s/it  epoch ETA 3.9 min
+  epoch 13 it 100/1038  loss 0.6398  0.23s/it  epoch ETA 3.6 min
+  epoch 13 it 150/1038  loss 0.6462  0.22s/it  epoch ETA 3.3 min
+  epoch 13 it 200/1038  loss 0.6472  0.22s/it  epoch ETA 3.1 min
+  epoch 13 it 250/1038  loss 0.6464  0.23s/it  epoch ETA 3.0 min
+  epoch 13 it 300/1038  loss 0.6399  0.22s/it  epoch ETA 2.8 min
+  epoch 13 it 350/1038  loss 0.6387  0.22s/it  epoch ETA 2.6 min
+  epoch 13 it 400/1038  loss 0.6361  0.22s/it  epoch ETA 2.4 min
+  epoch 13 it 450/1038  loss 0.6385  0.22s/it  epoch ETA 2.2 min
+  epoch 13 it 500/1038  loss 0.6384  0.22s/it  epoch ETA 2.0 min
+  epoch 13 it 550/1038  loss 0.6383  0.22s/it  epoch ETA 1.8 min
+  epoch 13 it 600/1038  loss 0.6380  0.22s/it  epoch ETA 1.6 min
+  epoch 13 it 650/1038  loss 0.6414  0.22s/it  epoch ETA 1.4 min
+  epoch 13 it 700/1038  loss 0.6407  0.22s/it  epoch ETA 1.2 min
+  epoch 13 it 750/1038  loss 0.6445  0.22s/it  epoch ETA 1.1 min
+  epoch 13 it 800/1038  loss 0.6410  0.22s/it  epoch ETA 0.9 min
+  epoch 13 it 850/1038  loss 0.6449  0.22s/it  epoch ETA 0.7 min
+  epoch 13 it 900/1038  loss 0.6427  0.22s/it  epoch ETA 0.5 min
+  epoch 13 it 950/1038  loss 0.6440  0.22s/it  epoch ETA 0.3 min
+  epoch 13 it 1000/1038  loss 0.6427  0.22s/it  epoch ETA 0.1 min
+epoch 13/20  train_loss 0.6405  val_loss 0.8598  time 246s
+  epoch 14 it 50/1038  loss 0.6063  0.23s/it  epoch ETA 3.8 min
+  epoch 14 it 100/1038  loss 0.6098  0.23s/it  epoch ETA 3.5 min
+  epoch 14 it 150/1038  loss 0.6066  0.23s/it  epoch ETA 3.3 min
+  epoch 14 it 200/1038  loss 0.6082  0.23s/it  epoch ETA 3.1 min
+  epoch 14 it 250/1038  loss 0.6174  0.23s/it  epoch ETA 3.0 min
+  epoch 14 it 300/1038  loss 0.6147  0.22s/it  epoch ETA 2.8 min
+  epoch 14 it 350/1038  loss 0.6175  0.22s/it  epoch ETA 2.6 min
+  epoch 14 it 400/1038  loss 0.6199  0.22s/it  epoch ETA 2.4 min
+  epoch 14 it 450/1038  loss 0.6201  0.22s/it  epoch ETA 2.2 min
+  epoch 14 it 500/1038  loss 0.6197  0.22s/it  epoch ETA 2.0 min
+  epoch 14 it 550/1038  loss 0.6191  0.22s/it  epoch ETA 1.8 min
+  epoch 14 it 600/1038  loss 0.6189  0.22s/it  epoch ETA 1.6 min
+  epoch 14 it 650/1038  loss 0.6186  0.22s/it  epoch ETA 1.4 min
+  epoch 14 it 700/1038  loss 0.6223  0.22s/it  epoch ETA 1.3 min
+  epoch 14 it 750/1038  loss 0.6230  0.22s/it  epoch ETA 1.1 min
+  epoch 14 it 800/1038  loss 0.6235  0.22s/it  epoch ETA 0.9 min
+  epoch 14 it 850/1038  loss 0.6266  0.22s/it  epoch ETA 0.7 min
+  epoch 14 it 900/1038  loss 0.6271  0.22s/it  epoch ETA 0.5 min
+  epoch 14 it 950/1038  loss 0.6285  0.22s/it  epoch ETA 0.3 min
+  epoch 14 it 1000/1038  loss 0.6290  0.22s/it  epoch ETA 0.1 min
+epoch 14/20  train_loss 0.6279  val_loss 0.8650  time 250s
+  epoch 15 it 50/1038  loss 0.6385  0.24s/it  epoch ETA 3.9 min
+  epoch 15 it 100/1038  loss 0.6109  0.23s/it  epoch ETA 3.6 min
+  epoch 15 it 150/1038  loss 0.6181  0.23s/it  epoch ETA 3.4 min
+  epoch 15 it 200/1038  loss 0.6108  0.23s/it  epoch ETA 3.1 min
+  epoch 15 it 250/1038  loss 0.6055  0.22s/it  epoch ETA 2.9 min
+  epoch 15 it 300/1038  loss 0.6064  0.22s/it  epoch ETA 2.8 min
+  epoch 15 it 350/1038  loss 0.6149  0.22s/it  epoch ETA 2.6 min
+  epoch 15 it 400/1038  loss 0.6195  0.22s/it  epoch ETA 2.4 min
+  epoch 15 it 450/1038  loss 0.6207  0.22s/it  epoch ETA 2.2 min
+  epoch 15 it 500/1038  loss 0.6249  0.22s/it  epoch ETA 2.0 min
+  epoch 15 it 550/1038  loss 0.6227  0.22s/it  epoch ETA 1.8 min
+  epoch 15 it 600/1038  loss 0.6231  0.22s/it  epoch ETA 1.6 min
+  epoch 15 it 650/1038  loss 0.6203  0.22s/it  epoch ETA 1.4 min
+  epoch 15 it 700/1038  loss 0.6218  0.22s/it  epoch ETA 1.3 min
+  epoch 15 it 750/1038  loss 0.6213  0.22s/it  epoch ETA 1.1 min
+  epoch 15 it 800/1038  loss 0.6185  0.22s/it  epoch ETA 0.9 min
+  epoch 15 it 850/1038  loss 0.6160  0.22s/it  epoch ETA 0.7 min
+  epoch 15 it 900/1038  loss 0.6174  0.22s/it  epoch ETA 0.5 min
+  epoch 15 it 950/1038  loss 0.6162  0.22s/it  epoch ETA 0.3 min
+  epoch 15 it 1000/1038  loss 0.6163  0.22s/it  epoch ETA 0.1 min
+epoch 15/20  train_loss 0.6154  val_loss 0.8592  time 250s
+  epoch 16 it 50/1038  loss 0.5372  0.24s/it  epoch ETA 4.0 min
+  epoch 16 it 100/1038  loss 0.5783  0.23s/it  epoch ETA 3.7 min
+  epoch 16 it 150/1038  loss 0.5964  0.23s/it  epoch ETA 3.4 min
+  epoch 16 it 200/1038  loss 0.5990  0.23s/it  epoch ETA 3.2 min
+  epoch 16 it 250/1038  loss 0.6082  0.23s/it  epoch ETA 3.0 min
+  epoch 16 it 300/1038  loss 0.6034  0.23s/it  epoch ETA 2.8 min
+  epoch 16 it 350/1038  loss 0.6048  0.23s/it  epoch ETA 2.6 min
+  epoch 16 it 400/1038  loss 0.6049  0.23s/it  epoch ETA 2.4 min
+  epoch 16 it 450/1038  loss 0.6034  0.23s/it  epoch ETA 2.2 min
+  epoch 16 it 500/1038  loss 0.6023  0.23s/it  epoch ETA 2.0 min
+  epoch 16 it 550/1038  loss 0.5981  0.23s/it  epoch ETA 1.8 min
+  epoch 16 it 600/1038  loss 0.5908  0.22s/it  epoch ETA 1.6 min
+  epoch 16 it 650/1038  loss 0.5949  0.22s/it  epoch ETA 1.5 min
+  epoch 16 it 700/1038  loss 0.5994  0.22s/it  epoch ETA 1.3 min
+  epoch 16 it 750/1038  loss 0.5998  0.22s/it  epoch ETA 1.1 min
+  epoch 16 it 800/1038  loss 0.6013  0.22s/it  epoch ETA 0.9 min
+  epoch 16 it 850/1038  loss 0.6011  0.22s/it  epoch ETA 0.7 min
+  epoch 16 it 900/1038  loss 0.5988  0.22s/it  epoch ETA 0.5 min
+  epoch 16 it 950/1038  loss 0.6012  0.22s/it  epoch ETA 0.3 min
+  epoch 16 it 1000/1038  loss 0.6020  0.22s/it  epoch ETA 0.1 min
+epoch 16/20  train_loss 0.6009  val_loss 0.8866  time 251s
+  epoch 17 it 50/1038  loss 0.5919  0.23s/it  epoch ETA 3.8 min
+  epoch 17 it 100/1038  loss 0.5917  0.23s/it  epoch ETA 3.5 min
+  epoch 17 it 150/1038  loss 0.5929  0.22s/it  epoch ETA 3.3 min
+  epoch 17 it 200/1038  loss 0.6001  0.23s/it  epoch ETA 3.1 min
+  epoch 17 it 250/1038  loss 0.5940  0.22s/it  epoch ETA 3.0 min
+  epoch 17 it 300/1038  loss 0.5967  0.22s/it  epoch ETA 2.8 min
+  epoch 17 it 350/1038  loss 0.5955  0.22s/it  epoch ETA 2.6 min
+  epoch 17 it 400/1038  loss 0.5954  0.22s/it  epoch ETA 2.4 min
+  epoch 17 it 450/1038  loss 0.5923  0.22s/it  epoch ETA 2.2 min
+  epoch 17 it 500/1038  loss 0.5891  0.22s/it  epoch ETA 2.0 min
+  epoch 17 it 550/1038  loss 0.5859  0.22s/it  epoch ETA 1.8 min
+  epoch 17 it 600/1038  loss 0.5846  0.22s/it  epoch ETA 1.6 min
+  epoch 17 it 650/1038  loss 0.5857  0.22s/it  epoch ETA 1.4 min
+  epoch 17 it 700/1038  loss 0.5880  0.22s/it  epoch ETA 1.3 min
+  epoch 17 it 750/1038  loss 0.5882  0.22s/it  epoch ETA 1.1 min
+  epoch 17 it 800/1038  loss 0.5903  0.22s/it  epoch ETA 0.9 min
+  epoch 17 it 850/1038  loss 0.5912  0.22s/it  epoch ETA 0.7 min
+  epoch 17 it 900/1038  loss 0.5925  0.22s/it  epoch ETA 0.5 min
+  epoch 17 it 950/1038  loss 0.5936  0.22s/it  epoch ETA 0.3 min
+  epoch 17 it 1000/1038  loss 0.5931  0.22s/it  epoch ETA 0.1 min
+epoch 17/20  train_loss 0.5954  val_loss 0.8620  time 250s
+Traceback (most recent call last):
+  File "/home/aayusha/.local/lib/python3.14/site-packages/torch/serialization.py", line 1003, in save
+    _save(
+    ~~~~~^
+        obj,
+        ^^^^
+    ...<3 lines>...
+        _disable_byteorder_record,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/aayusha/.local/lib/python3.14/site-packages/torch/serialization.py", line 1312, in _save
+    zip_file.write_record(name, storage, num_bytes)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: basic_ios::clear: iostream error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/aayusha/Documents/GitHub/MAGFiLO-Challenge-2026/train.py", line 211, in <module>
+    main()
+    ~~~~^^
+  File "/home/aayusha/Documents/GitHub/MAGFiLO-Challenge-2026/train.py", line 200, in main
+    torch.save(model.state_dict(), out / f"epoch_{epoch:02d}.pth")   # pick by PQ, not loss
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/aayusha/.local/lib/python3.14/site-packages/torch/serialization.py", line 1002, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+         ~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/aayusha/.local/lib/python3.14/site-packages/torch/serialization.py", line 834, in __exit__
+    self.file_like.write_end_of_file()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+RuntimeError: [enforce fail at inline_container.cc:672] . unexpected pos 28826624 vs 28826512
