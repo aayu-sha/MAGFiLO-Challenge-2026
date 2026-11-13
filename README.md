@@ -142,7 +142,7 @@ score threshold. Public PQ is the Kaggle leaderboard value.
 |---|---|---|
 | Mask R-CNN, 1024 px, 12 epochs, no augmentation | 0.357 | 0.34 |
 | + flip augmentation, 20 epochs (epoch 17) | 0.389 | 0.34 |
-| **1280 px, flips, 16 epochs (final)** | **0.393** | **0.36** |
+| **1280 px, flips, 16 epochs (final; stored fp16 weights)** | **0.394** | **0.36** |
 | 1280 px + consensus labels (not submitted) | 0.388 | not submitted |
 | 1280 px + small anchors (not submitted) | 0.387 | not submitted |
 

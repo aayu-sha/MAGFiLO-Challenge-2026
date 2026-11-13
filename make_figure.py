@@ -61,7 +61,7 @@ model.to(device).eval()
 model.roi_heads.score_thresh = a.score_thresh
 
 palette = [tuple(c[:3]) for c in plt.get_cmap("tab10").colors]
-fig, axes = plt.subplots(a.n, 2, figsize=(7.0, 3.5 * a.n), squeeze=False)
+fig, axes = plt.subplots(1, 2 * a.n, figsize=(7.0, 7.0 / (2 * a.n) + 0.35), squeeze=False)
 for r, idx in enumerate(chosen):
     s = base[idx]
     img = s["image"][0].numpy()
@@ -80,13 +80,13 @@ for r, idx in enumerate(chosen):
     else:
         pm = np.zeros((0,) + gt.shape[1:], bool)
 
-    axes[r, 0].imshow(paint(gray, gt, [(0.1, 1.0, 0.2)] * len(gt)))
-    axes[r, 1].imshow(paint(gray, pm, [palette[i % 10] for i in range(len(pm))]))
-    axes[r, 0].set_title(f"Annotation ({len(gt)} filaments)", fontsize=9)
-    axes[r, 1].set_title(f"Prediction ({len(pm)} filaments)", fontsize=9)
-    for ax in axes[r]:
+    axes[0, 2 * r].imshow(paint(gray, gt, [(0.1, 1.0, 0.2)] * len(gt)))
+    axes[0, 2 * r + 1].imshow(paint(gray, pm, [palette[i % 10] for i in range(len(pm))]))
+    axes[0, 2 * r].set_title(f"Annotation ({len(gt)})", fontsize=8)
+    axes[0, 2 * r + 1].set_title(f"Prediction ({len(pm)})", fontsize=8)
+    for ax in axes[0, 2 * r: 2 * r + 2]:
         ax.axis("off")
 
-plt.tight_layout()
-fig.savefig(a.out, dpi=200, bbox_inches="tight")
+plt.tight_layout(pad=0.3)
+fig.savefig(a.out, dpi=220, bbox_inches="tight")
 print("saved", a.out)
